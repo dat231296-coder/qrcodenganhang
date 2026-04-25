@@ -13,12 +13,12 @@
     
     <style>
         :root {
-            --primary-color: #4f46e5; /* Màu Indigo đậm */
+            --primary-color: #4f46e5;
             --primary-hover: #4338ca;
-            --secondary-color: #f3f4f6; /* Màu xám rất nhạt */
+            --secondary-color: #f3f4f6;
             --text-main: #1f2937;
             --text-sub: #6b7280;
-            --bg-body: #eef2ff; /* Màu nền xanh Indigo siêu nhạt */
+            --bg-body: #eef2ff;
         }
 
         body {
@@ -34,13 +34,13 @@
 
         .main-container {
             width: 100%;
-            max-width: 950px;
+            max-width: 1000px; /* Nới rộng một chút để form 2 cột đẹp hơn */
         }
 
         .main-card {
             background: white;
             border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.08); /* Đổ bóng có màu xanh */
+            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.08);
             overflow: hidden;
             transition: transform 0.2s;
         }
@@ -49,7 +49,6 @@
             padding: 40px;
         }
 
-        /* Styling cho tiêu đề */
         .page-title {
             font-weight: 800;
             color: var(--primary-color);
@@ -62,7 +61,6 @@
             font-size: 1rem;
         }
 
-        /* Styling cho Form nhập liệu */
         .input-group-custom {
             margin-bottom: 20px;
         }
@@ -87,7 +85,6 @@
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
-        /* Styling cho nút bấm */
         .btn-submit {
             background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             border: none;
@@ -103,7 +100,6 @@
             box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
         }
 
-        /* Styling khu vực kết quả (Phần bên phải) */
         .result-panel {
             background-color: var(--secondary-color);
             border-radius: 20px;
@@ -114,7 +110,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            opacity: 0.8; /* Mờ khi chưa có kết quả */
+            opacity: 0.8;
         }
 
         .result-panel.has-result {
@@ -157,15 +153,9 @@
             background-color: var(--bg-body);
         }
 
-        /* Đảm bảo responsive */
         @media (max-width: 768px) {
-            .card-body-wrapper {
-                padding: 25px;
-            }
-            .result-panel {
-                margin-top: 30px;
-                padding: 20px;
-            }
+            .card-body-wrapper { padding: 25px; }
+            .result-panel { margin-top: 30px; padding: 20px; }
         }
     </style>
 </head>
@@ -189,9 +179,15 @@
                                 </select>
                             </div>
                             
-                            <div class="input-group-custom">
-                                <label class="form-label">💳 Số tài khoản nhận tiền</label>
-                                <input type="text" id="account" class="form-control" placeholder="Nhập số tài khoản của bạn" required>
+                            <div class="row">
+                                <div class="col-sm-6 input-group-custom">
+                                    <label class="form-label">💳 Số tài khoản</label>
+                                    <input type="text" id="account" class="form-control" placeholder="Ví dụ: 0123456789" required>
+                                </div>
+                                <div class="col-sm-6 input-group-custom">
+                                    <label class="form-label">👤 Tên chủ tài khoản</label>
+                                    <input type="text" id="accountName" class="form-control" placeholder="Viết hoa không dấu" required>
+                                </div>
                             </div>
                             
                             <div class="row">
@@ -234,7 +230,6 @@
     </div>
 
     <script>
-        // Gọi API trực tiếp từ Frontend để lấy danh sách ngân hàng
         document.addEventListener('DOMContentLoaded', async () => {
             const bankSelect = document.getElementById('bank');
             try {
@@ -251,19 +246,18 @@
             }
         });
 
-        // Xử lý khi ấn nút tạo QR
         document.getElementById('qr-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const bin = document.getElementById('bank').value;
             const acc = document.getElementById('account').value;
+            const accName = encodeURIComponent(document.getElementById('accountName').value); // Lấy tên tài khoản
             const amt = document.getElementById('amount').value;
             const info = encodeURIComponent(document.getElementById('info').value);
             
-            // Công thức tạo link ảnh QR
-            const qrUrl = `https://img.vietqr.io/image/${bin}-${acc}-compact2.png?amount=${amt}&addInfo=${info}`;
+            // Công thức tạo link ảnh QR (Đã thêm biến accountName)
+            const qrUrl = `https://img.vietqr.io/image/${bin}-${acc}-compact2.png?amount=${amt}&addInfo=${info}&accountName=${accName}`;
             
-            // Cập nhật giao diện
             const resultPanel = document.getElementById('result-panel');
             const qrImg = document.getElementById('qr-img');
             const placeholder = document.getElementById('qr-placeholder');
@@ -273,7 +267,6 @@
             qrImg.src = qrUrl;
             downloadLink.href = qrUrl;
             
-            // Ẩn placeholder, hiện QR và nút tải, thay đổi styling của panel
             placeholder.classList.add('d-none');
             qrImg.classList.remove('d-none');
             downloadArea.classList.remove('d-none');
