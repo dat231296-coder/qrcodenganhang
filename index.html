@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietQR Pro - Tạo Mã QR Thanh Toán Nhanh</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5; /* Màu Indigo đậm */
+            --primary-hover: #4338ca;
+            --secondary-color: #f3f4f6; /* Màu xám rất nhạt */
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --bg-body: #eef2ff; /* Màu nền xanh Indigo siêu nhạt */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.08); /* Đổ bóng có màu xanh */
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .card-body-wrapper {
+            padding: 40px;
+        }
+
+        /* Styling cho tiêu đề */
+        .page-title {
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .page-subtitle {
+            color: var(--text-sub);
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+
+        /* Styling cho Form nhập liệu */
+        .input-group-custom {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Styling cho nút bấm */
+        .btn-submit {
+            background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 15px 25px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Styling khu vực kết quả (Phần bên phải) */
+        .result-panel {
+            background-color: var(--secondary-color);
+            border-radius: 20px;
+            padding: 30px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0.8; /* Mờ khi chưa có kết quả */
+        }
+
+        .result-panel.has-result {
+            opacity: 1;
+            border: 2px solid #d1d5db;
+        }
+
+        .qr-placeholder {
+            text-align: center;
+            color: var(--text-sub);
+        }
+
+        .qr-placeholder i {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        #qr-img {
+            max-width: 250px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: white;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-download {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px 20px;
+        }
+        
+        .btn-download:hover {
+            background-color: var(--bg-body);
+        }
+
+        /* Đảm bảo responsive */
+        @media (max-width: 768px) {
+            .card-body-wrapper {
+                padding: 25px;
+            }
+            .result-panel {
+                margin-top: 30px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container main-container">
+        <div class="main-card">
+            <div class="card-body-wrapper">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="text-center text-md-start">
+                            <h1 class="page-title">VietQR <span style="font-weight: 300;">PRO</span></h1>
+                            <p class="page-subtitle">Nhập thông tin bên dưới để tạo mã QR thanh toán chuẩn VietQR nhanh chóng.</p>
+                        </div>
+                        
+                        <form id="qr-form">
+                            <div class="input-group-custom">
+                                <label class="form-label">🏦 Ngân hàng thụ hưởng</label>
+                                <select id="bank" class="form-select" required>
+                                    <option value="">Đang tải danh sách...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group-custom">
+                                <label class="form-label">💳 Số tài khoản nhận tiền</label>
+                                <input type="text" id="account" class="form-control" placeholder="Nhập số tài khoản của bạn" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-sm-6 input-group-custom">
+                                    <label class="form-label">💵 Số tiền (VNĐ)</label>
+                                    <input type="number" id="amount" class="form-control" placeholder="Ví dụ: 50000" required>
+                                </div>
+                                <div class="col-sm-6 input-group-custom">
+                                    <label class="form-label">📝 Nội dung chuyển khoản</label>
+                                    <input type="text" id="info" class="form-control" placeholder="Tên hoặc lý do" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-submit w-100 fs-5">Tạo Mã QR Thanh Toán</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-5 mt-4 mt-md-0">
+                        <div id="result-panel" class="result-panel">
+                            
+                            <div id="qr-placeholder" class="qr-placeholder">
+                                <i class="text-primary fs-1 mb-3">✦</i>
+                                <h5>Kết quả sẽ hiện ở đây</h5>
+                                <p class="small">Vui lòng điền thông tin và bấm nút tạo mã.</p>
+                            </div>
+
+                            <img id="qr-img" src="" alt="QR Code" class="d-none">
+                            
+                            <div id="download-area" class="text-center d-none">
+                                <p class="text-success fw-bold">✓ Đã tạo thành công</p>
+                                <a id="download-link" href="#" target="_blank" class="btn btn-download">Xem ảnh gốc</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gọi API trực tiếp từ Frontend để lấy danh sách ngân hàng
+        document.addEventListener('DOMContentLoaded', async () => {
+            const bankSelect = document.getElementById('bank');
+            try {
+                const response = await fetch('https://api.vietqr.io/v2/banks');
+                const result = await response.json();
+                const banks = result.data;
+                
+                bankSelect.innerHTML = '<option value="">-- Vui lòng chọn ngân hàng --</option>';
+                banks.forEach(bank => {
+                    bankSelect.innerHTML += `<option value="${bank.bin}">${bank.shortName} - ${bank.name}</option>`;
+                });
+            } catch (error) {
+                bankSelect.innerHTML = '<option value="">Lỗi tải dữ liệu ngân hàng.</option>';
+            }
+        });
+
+        // Xử lý khi ấn nút tạo QR
+        document.getElementById('qr-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const bin = document.getElementById('bank').value;
+            const acc = document.getElementById('account').value;
+            const amt = document.getElementById('amount').value;
+            const info = encodeURIComponent(document.getElementById('info').value);
+            
+            // Công thức tạo link ảnh QR
+            const qrUrl = `https://img.vietqr.io/image/${bin}-${acc}-compact2.png?amount=${amt}&addInfo=${info}`;
+            
+            // Cập nhật giao diện
+            const resultPanel = document.getElementById('result-panel');
+            const qrImg = document.getElementById('qr-img');
+            const placeholder = document.getElementById('qr-placeholder');
+            const downloadArea = document.getElementById('download-area');
+            const downloadLink = document.getElementById('download-link');
+
+            qrImg.src = qrUrl;
+            downloadLink.href = qrUrl;
+            
+            // Ẩn placeholder, hiện QR và nút tải, thay đổi styling của panel
+            placeholder.classList.add('d-none');
+            qrImg.classList.remove('d-none');
+            downloadArea.classList.remove('d-none');
+            resultPanel.classList.add('has-result');
+        });
+    </script>
+</body>
+</html>
