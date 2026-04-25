@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
@@ -32,132 +31,67 @@
             padding: 20px 0;
         }
 
-        .main-container {
-            width: 100%;
-            max-width: 950px; 
-        }
-
+        .main-container { width: 100%; max-width: 950px; }
         .main-card {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.08);
-            overflow: hidden;
-            transition: transform 0.2s;
+            background: white; border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.08); overflow: hidden;
         }
+        .card-body-wrapper { padding: 40px; }
 
-        .card-body-wrapper {
-            padding: 40px;
-        }
+        .page-title { font-weight: 800; color: var(--primary-color); margin-bottom: 10px; }
+        .page-subtitle { color: var(--text-sub); margin-bottom: 40px; font-size: 1rem; }
 
-        .page-title {
-            font-weight: 800;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            color: var(--text-sub);
-            margin-bottom: 40px;
-            font-size: 1rem;
-        }
-
-        .input-group-custom {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #4b5563;
-            margin-bottom: 8px;
-        }
-
-        .optional-text {
-            font-size: 0.8rem;
-            color: #9ca3af;
-            font-weight: 400;
-        }
-
+        .form-label { font-weight: 600; font-size: 0.9rem; color: #4b5563; margin-bottom: 8px; }
+        .optional-text { font-size: 0.8rem; color: #9ca3af; font-weight: 400; }
         .form-control, .form-select {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 12px 15px;
-            font-weight: 500;
-            transition: all 0.2s;
+            border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px 15px; font-weight: 500;
         }
-
         .form-control:focus, .form-select:focus {
-            border-color: #a5b4fc;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            border-color: #a5b4fc; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
         .btn-submit {
             background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            border: none;
-            color: white;
-            font-weight: 700;
-            padding: 15px 25px;
-            border-radius: 12px;
-            transition: all 0.3s;
+            border: none; color: white; font-weight: 700; padding: 15px 25px; border-radius: 12px;
         }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3); color: white;}
 
         .result-panel {
-            background-color: var(--secondary-color);
-            border-radius: 20px;
-            padding: 30px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            opacity: 0.8;
+            background-color: var(--secondary-color); border-radius: 20px; padding: 30px;
+            height: 100%; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; opacity: 0.8;
         }
+        .result-panel.has-result { opacity: 1; border: 2px solid #d1d5db; }
 
-        .result-panel.has-result {
-            opacity: 1;
-            border: 2px solid #d1d5db;
-        }
-
-        .qr-placeholder {
-            text-align: center;
-            color: var(--text-sub);
-        }
-
-        .qr-placeholder i {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
+        .qr-placeholder { text-align: center; color: var(--text-sub); }
+        .qr-placeholder i { font-size: 4rem; display: block; margin-bottom: 15px; opacity: 0.5; }
 
         #qr-img {
-            max-width: 250px;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            background: white;
-            padding: 10px;
-            margin-bottom: 20px;
+            max-width: 220px; height: auto; border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: white; padding: 10px; margin-bottom: 15px;
         }
 
-        .btn-download {
-            background-color: white;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 8px 20px;
+        /* Styling cho bảng thông tin Copy */
+        .transfer-info-box {
+            background: white; width: 100%; border-radius: 12px; padding: 15px;
+            text-align: left; font-size: 0.9rem; margin-bottom: 15px;
+            border: 1px dashed #cbd5e1;
         }
+        .info-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; border-bottom: 1px solid #f1f5f9;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #64748b; font-weight: 500; }
+        .info-value { font-weight: 700; color: #0f172a; word-break: break-all; margin-right: 10px;}
         
-        .btn-download:hover {
-            background-color: var(--bg-body);
+        .btn-copy {
+            background: #eef2ff; color: var(--primary-color); border: none;
+            padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
         }
+        .btn-copy:hover { background: var(--primary-color); color: white; }
+        .btn-copy.copied { background: #10b981; color: white; }
 
         @media (max-width: 768px) {
             .card-body-wrapper { padding: 25px; }
@@ -174,41 +108,41 @@
                     <div class="col-md-7">
                         <div class="text-center text-md-start">
                             <h1 class="page-title">VietQR <span style="font-weight: 300;">PRO</span></h1>
-                            <p class="page-subtitle">Nhập thông tin bên dưới để tạo mã QR thanh toán chuẩn VietQR nhanh chóng.</p>
+                            <p class="page-subtitle">Hỗ trợ quét mã hoặc copy thông tin chuyển khoản siêu tốc.</p>
                         </div>
                         
                         <form id="qr-form">
-                            <div class="input-group-custom">
+                            <div class="mb-3">
                                 <label class="form-label">🏦 Ngân hàng thụ hưởng</label>
                                 <select id="bank" class="form-select" required>
                                     <option value="">Đang tải danh sách...</option>
                                 </select>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-sm-6 input-group-custom">
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
                                     <label class="form-label">💳 Số tài khoản</label>
                                     <input type="text" id="account" class="form-control" placeholder="Ví dụ: 0123456789" required>
                                 </div>
-                                <div class="col-sm-6 input-group-custom">
+                                <div class="col-sm-6 mt-3 mt-sm-0">
                                     <label class="form-label">👤 Tên chủ tài khoản</label>
                                     <input type="text" id="accountName" class="form-control" placeholder="VIẾT HOA KHÔNG DẤU" required>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-sm-6 input-group-custom">
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
                                     <label class="form-label">💵 Số tiền <span class="optional-text">(Không bắt buộc)</span></label>
                                     <input type="number" id="amount" class="form-control" placeholder="Để trống khách tự nhập">
                                 </div>
-                                <div class="col-sm-6 input-group-custom">
+                                <div class="col-sm-6 mt-3 mt-sm-0">
                                     <label class="form-label">📝 Nội dung <span class="optional-text">(Không bắt buộc)</span></label>
                                     <input type="text" id="info" class="form-control" placeholder="Tên hoặc lý do">
                                 </div>
                             </div>
                             
                             <div class="mt-4">
-                                <button type="submit" class="btn btn-submit w-100 fs-5">Tạo Mã QR Thanh Toán</button>
+                                <button type="submit" class="btn btn-submit w-100 fs-5">Tạo Mã QR & Nút Copy</button>
                             </div>
                         </form>
                     </div>
@@ -219,15 +153,42 @@
                             <div id="qr-placeholder" class="qr-placeholder">
                                 <i class="text-primary fs-1 mb-3">✦</i>
                                 <h5>Kết quả sẽ hiện ở đây</h5>
-                                <p class="small">Vui lòng điền thông tin và bấm nút tạo mã.</p>
                             </div>
 
                             <img id="qr-img" src="" alt="QR Code" class="d-none">
                             
-                            <div id="download-area" class="text-center d-none">
-                                <p class="text-success fw-bold">✓ Đã tạo thành công</p>
-                                <a id="download-link" href="#" target="_blank" class="btn btn-download">Xem ảnh gốc</a>
+                            <div id="transfer-info" class="transfer-info-box d-none">
+                                <div class="info-row">
+                                    <span class="info-label">Ngân hàng:</span>
+                                    <span class="info-value" id="res-bank">...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Chủ TK:</span>
+                                    <span class="info-value" id="res-name">...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Số TK:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-account">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-account', this)">Copy</button>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Số tiền:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-amount">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-amount-raw', this)">Copy</button>
+                                        <span id="res-amount-raw" class="d-none"></span> </div>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Nội dung:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-info">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-info', this)">Copy</button>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -236,6 +197,26 @@
     </div>
 
     <script>
+        // Hàm xử lý việc Copy văn bản
+        function copyToClipboard(elementId, btnElement) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Đổi chữ nút thành "Đã Copy" để báo hiệu
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "Đã Copy ✓";
+                btnElement.classList.add("copied");
+
+                // Trả lại trạng thái cũ sau 2 giây
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.classList.remove("copied");
+                }, 2000);
+            }).catch(err => {
+                alert("Lỗi không thể copy được!");
+            });
+        }
+
         // Tải danh sách ngân hàng
         document.addEventListener('DOMContentLoaded', async () => {
             const bankSelect = document.getElementById('bank');
@@ -246,7 +227,7 @@
                 
                 bankSelect.innerHTML = '<option value="">-- Vui lòng chọn ngân hàng --</option>';
                 banks.forEach(bank => {
-                    bankSelect.innerHTML += `<option value="${bank.bin}">${bank.shortName} - ${bank.name}</option>`;
+                    bankSelect.innerHTML += `<option value="${bank.bin}" data-name="${bank.shortName}">${bank.shortName} - ${bank.name}</option>`;
                 });
             } catch (error) {
                 bankSelect.innerHTML = '<option value="">Lỗi tải dữ liệu ngân hàng.</option>';
@@ -257,49 +238,46 @@
         document.getElementById('qr-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Lấy dữ liệu
-            const bin = document.getElementById('bank').value;
+            const bankSelect = document.getElementById('bank');
+            const bin = bankSelect.value;
+            const bankName = bankSelect.options[bankSelect.selectedIndex].getAttribute('data-name');
+            
             const acc = document.getElementById('account').value;
-            const accName = document.getElementById('accountName').value;
+            const accName = document.getElementById('accountName').value.toUpperCase();
             const amt = document.getElementById('amount').value;
             const info = document.getElementById('info').value;
             
-            // Base URL
+            // 1. TẠO LINK ẢNH QR
             let qrUrl = `https://img.vietqr.io/image/${bin}-${acc}-compact2.png`;
-            
-            // Mảng chứa các tham số phụ
             let queryParams = [];
+            if (accName) queryParams.push(`accountName=${encodeURIComponent(accName)}`);
+            if (amt) queryParams.push(`amount=${amt}`);
+            if (info) queryParams.push(`addInfo=${encodeURIComponent(info)}`);
+            if (queryParams.length > 0) qrUrl += '?' + queryParams.join('&');
             
-            // Nếu người dùng có nhập thì mới nối vào link
-            if (accName) {
-                queryParams.push(`accountName=${encodeURIComponent(accName)}`);
-            }
-            if (amt) {
-                queryParams.push(`amount=${amt}`);
-            }
-            if (info) {
-                queryParams.push(`addInfo=${encodeURIComponent(info)}`);
-            }
+            // 2. HIỂN THỊ DỮ LIỆU LÊN BẢNG COPY
+            document.getElementById('res-bank').innerText = bankName;
+            document.getElementById('res-name').innerText = accName;
+            document.getElementById('res-account').innerText = acc;
             
-            // Nối chuỗi bằng dấu ? và &
-            if (queryParams.length > 0) {
-                qrUrl += '?' + queryParams.join('&');
+            if(amt) {
+                // Định dạng số tiền có dấu phẩy cho đẹp (VD: 50,000)
+                document.getElementById('res-amount').innerText = new Intl.NumberFormat('vi-VN').format(amt) + ' đ';
+                // Lưu số gốc để copy (không có dấu phẩy hay chữ "đ")
+                document.getElementById('res-amount-raw').innerText = amt;
+            } else {
+                document.getElementById('res-amount').innerText = "Tự nhập";
+                document.getElementById('res-amount-raw').innerText = "";
             }
-            
-            // Cập nhật giao diện
-            const resultPanel = document.getElementById('result-panel');
-            const qrImg = document.getElementById('qr-img');
-            const placeholder = document.getElementById('qr-placeholder');
-            const downloadArea = document.getElementById('download-area');
-            const downloadLink = document.getElementById('download-link');
 
-            qrImg.src = qrUrl;
-            downloadLink.href = qrUrl;
-            
-            placeholder.classList.add('d-none');
-            qrImg.classList.remove('d-none');
-            downloadArea.classList.remove('d-none');
-            resultPanel.classList.add('has-result');
+            document.getElementById('res-info').innerText = info ? info : "Trống";
+
+            // Cập nhật giao diện
+            document.getElementById('qr-img').src = qrUrl;
+            document.getElementById('qr-placeholder').classList.add('d-none');
+            document.getElementById('qr-img').classList.remove('d-none');
+            document.getElementById('transfer-info').classList.remove('d-none');
+            document.getElementById('result-panel').classList.add('has-result');
         });
     </script>
 </body>
