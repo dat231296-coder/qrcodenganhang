@@ -64,6 +64,7 @@
         .btn-submit {
             background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             border: none; color: white; font-weight: 700; padding: 15px 25px; border-radius: 12px;
+            transition: all 0.3s;
         }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3); color: white;}
 
@@ -118,13 +119,26 @@
                         <h1 class="page-title">VietQR <span style="font-weight: 300;">PRO</span></h1>
                         <p class="page-subtitle">Hệ thống thanh toán nhanh cho đối tác LINH HẢI.</p>
                         
-                        <span class="quick-select-label">Chọn tài khoản mặc định</span>
+                        <span class="quick-select-label">Chọn tài khoản thu tiền:</span>
                         <div class="quick-accounts">
                             <button type="button" class="btn-quick" onclick="fillAccount('970403', '030102164195', 'HKD LINH HAI')">
                                 🏦 <span><strong>Sacombank</strong><br><small>HKD LINH HAI</small></span>
                             </button>
+                            
                             <button type="button" class="btn-quick" onclick="fillAccount('970415', '111003008338', 'CT TNHH MTV LINH HAI')">
-                                🏦 <span><strong>Vietinbank</strong><br><small>LINH HAI CO., LTD</small></span>
+                                🏦 <span><strong>Vietinbank</strong><br><small>CT TNHH MTV LINH HAI</small></span>
+                            </button>
+
+                            <button type="button" class="btn-quick" onclick="fillAccount('970436', 'ĐIỀN_SỐ_TK_VÀO_ĐÂY', 'ĐIỀN_TÊN_VÀO_ĐÂY')">
+                                🏦 <span><strong>Vietcombank</strong><br><small>Tên chủ tài khoản...</small></span>
+                            </button>
+
+                            <button type="button" class="btn-quick" onclick="fillAccount('970422', 'ĐIỀN_SỐ_TK_VÀO_ĐÂY', 'ĐIỀN_TÊN_VÀO_ĐÂY')">
+                                🏦 <span><strong>MB Bank</strong><br><small>Tên chủ tài khoản...</small></span>
+                            </button>
+
+                            <button type="button" class="btn-quick" onclick="fillAccount('970407', 'ĐIỀN_SỐ_TK_VÀO_ĐÂY', 'ĐIỀN_TÊN_VÀO_ĐÂY')">
+                                🏦 <span><strong>Techcombank</strong><br><small>Tên chủ tài khoản...</small></span>
                             </button>
                         </div>
 
@@ -187,23 +201,55 @@
     </div>
 
     <script>
-        // Hàm tự động điền tài khoản
+        let pendingBankBin = null; 
+
+        // 1. Hàm tự động điền tài khoản
         function fillAccount(bankBin, accNum, accName) {
-            document.getElementById('bank').value = bankBin;
             document.getElementById('account').value = accNum;
             document.getElementById('accountName').value = accName;
+            
+            const bankSelect = document.getElementById('bank');
+            bankSelect.value = bankBin;
+            
+            if(bankSelect.value !== bankBin) {
+                pendingBankBin = bankBin;
+            }
         }
 
+        // 2. Hàm Copy siêu việt
         function copyToClipboard(elementId, btnElement) {
             const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
+            const showSuccess = () => {
                 const originalText = btnElement.innerText;
                 btnElement.innerText = "Đã Copy ✓";
                 btnElement.classList.add("copied");
                 setTimeout(() => { btnElement.innerText = originalText; btnElement.classList.remove("copied"); }, 2000);
-            });
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(showSuccess).catch(() => fallbackCopy(textToCopy));
+            } else {
+                fallbackCopy(textToCopy);
+            }
+
+            function fallbackCopy(text) {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; 
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showSuccess();
+                } catch (err) {
+                    alert("Trình duyệt của bạn đang chặn tính năng Copy!");
+                }
+                document.body.removeChild(textArea);
+            }
         }
 
+        // 3. Tải danh sách ngân hàng
         document.addEventListener('DOMContentLoaded', async () => {
             const bankSelect = document.getElementById('bank');
             try {
@@ -214,15 +260,29 @@
                 banks.forEach(bank => {
                     bankSelect.innerHTML += `<option value="${bank.bin}" data-name="${bank.shortName}">${bank.shortName} - ${bank.name}</option>`;
                 });
-            } catch (error) { bankSelect.innerHTML = '<option value="">Lỗi tải dữ liệu.</option>'; }
+
+                if(pendingBankBin) {
+                    bankSelect.value = pendingBankBin;
+                    pendingBankBin = null;
+                }
+            } catch (error) { 
+                bankSelect.innerHTML = '<option value="">Lỗi tải dữ liệu. Hãy tải lại trang.</option>'; 
+            }
         });
 
+        // 4. Xử lý khi bấm nút Tạo mã
         document.getElementById('qr-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const bankSelect = document.getElementById('bank');
             const bin = bankSelect.value;
+            
+            if (!bin) {
+                alert("Vui lòng chọn ngân hàng thụ hưởng!");
+                return;
+            }
+
             const bankName = bankSelect.options[bankSelect.selectedIndex].getAttribute('data-name');
-            const acc = document.getElementById('account').value;
+            const acc = document.getElementById('account').value.replace(/\s+/g, ''); 
             const accName = document.getElementById('accountName').value.toUpperCase();
             const amt = document.getElementById('amount').value;
             const info = document.getElementById('info').value;
@@ -248,4 +308,9 @@
             document.getElementById('qr-img').src = qrUrl;
             document.getElementById('qr-placeholder').classList.add('d-none');
             document.getElementById('qr-img').classList.remove('d-none');
-            document.getElementById('transfer-info').
+            document.getElementById('transfer-info').classList.remove('d-none');
+            document.getElementById('result-panel').classList.add('has-result');
+        });
+    </script>
+</body>
+</html>
