@@ -138,12 +138,6 @@
                             <button type="button" class="btn-quick" onclick="fillAccount('970415', '111003008338', 'CT TNHH MTV LINH HAI')">
                                 🏦 <span><strong>Vietinbank</strong><br><small>CT TNHH MTV LINH HAI</small></span>
                             </button>
-                            <button type="button" class="btn-quick" onclick="fillAccount('970436', '', '')">
-                                🏦 <span><strong>Vietcombank</strong><br><small>Thêm tài khoản...</small></span>
-                            </button>
-                            <button type="button" class="btn-quick" onclick="fillAccount('970422', '', '')">
-                                🏦 <span><strong>MB Bank</strong><br><small>Thêm tài khoản...</small></span>
-                            </button>
                         </div>
 
                         <form id="qr-form">
@@ -198,11 +192,17 @@
                             <div id="transfer-info" class="transfer-info-box d-none">
                                 <div class="info-row">
                                     <span class="info-label">Ngân hàng:</span>
-                                    <span class="info-value" id="res-bank">...</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-bank">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-bank', this)">Copy</button>
+                                    </div>
                                 </div>
                                 <div class="info-row">
                                     <span class="info-label">Chủ TK:</span>
-                                    <span class="info-value" id="res-name">...</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-name">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-name', this)">Copy</button>
+                                    </div>
                                 </div>
                                 <div class="info-row">
                                     <span class="info-label">Số TK:</span>
