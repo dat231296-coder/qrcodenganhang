@@ -89,26 +89,30 @@
             padding: 8px 15px; border-radius: 10px; font-weight: 700; font-size: 0.85rem;
             cursor: pointer; transition: all 0.2s; margin-bottom: 20px;
             display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+            width: 100%;
         }
         .btn-download-img:hover { background: #10b981; color: white; }
 
-        /* Styling cho Hộp tin nhắn mẫu mới */
-        .message-box-container {
-            width: 100%;
+        /* Styling cho bảng thông tin Copy từng phần */
+        .transfer-info-box {
+            background: white; width: 100%; border-radius: 12px; padding: 15px;
+            text-align: left; font-size: 0.95rem; margin-bottom: 15px; border: 1px dashed #cbd5e1;
         }
-        .message-preview {
-            background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 15px;
-            font-size: 0.95rem; color: #334155; line-height: 1.6; text-align: left;
-            margin-bottom: 15px; white-space: pre-wrap; word-break: break-word;
+        .info-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid #f1f5f9;
         }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #64748b; font-weight: 500; }
+        .info-value { font-weight: 700; color: #0f172a; word-break: break-all; margin-right: 10px;}
         
-        .btn-copy-msg {
-            background: white; color: var(--primary-color); border: 2px solid var(--primary-color);
-            padding: 10px; border-radius: 10px; font-weight: 700; width: 100%;
-            cursor: pointer; transition: all 0.2s;
+        .btn-copy {
+            background: #eef2ff; color: var(--primary-color); border: none;
+            padding: 5px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
         }
-        .btn-copy-msg:hover { background: #eef2ff; }
-        .btn-copy-msg.copied { background: #10b981; color: white; border-color: #10b981; }
+        .btn-copy:hover { background: var(--primary-color); color: white; }
+        .btn-copy.copied { background: #10b981; color: white; }
 
         @media (max-width: 768px) {
             .card-body-wrapper { padding: 25px; }
@@ -133,6 +137,12 @@
                             </button>
                             <button type="button" class="btn-quick" onclick="fillAccount('970415', '111003008338', 'CT TNHH MTV LINH HAI')">
                                 🏦 <span><strong>Vietinbank</strong><br><small>CT TNHH MTV LINH HAI</small></span>
+                            </button>
+                            <button type="button" class="btn-quick" onclick="fillAccount('970436', '', '')">
+                                🏦 <span><strong>Vietcombank</strong><br><small>Thêm tài khoản...</small></span>
+                            </button>
+                            <button type="button" class="btn-quick" onclick="fillAccount('970422', '', '')">
+                                🏦 <span><strong>MB Bank</strong><br><small>Thêm tài khoản...</small></span>
                             </button>
                         </div>
 
@@ -167,7 +177,7 @@
                             </div>
                             
                             <div class="mt-4">
-                                <button type="submit" class="btn btn-submit w-100 fs-5">Tạo Mã & Tin Nhắn Mẫu</button>
+                                <button type="submit" class="btn btn-submit w-100 fs-5">Tạo Mã QR Thanh Toán</button>
                             </div>
                         </form>
                     </div>
@@ -185,14 +195,36 @@
                                 ⬇️ TẢI ẢNH QR XUỐNG
                             </button>
                             
-                            <div id="message-container" class="message-box-container d-none">
-                                <p class="text-center fw-bold text-primary mb-2" style="font-size: 0.9rem;">📩 Mẫu tin nhắn gửi khách</p>
-                                
-                                <div class="message-preview" id="final-message-text"></div>
-                                
-                                <button type="button" class="btn-copy-msg" onclick="copyFullMessage(this)">
-                                    📋 COPY TOÀN BỘ TIN NHẮN
-                                </button>
+                            <div id="transfer-info" class="transfer-info-box d-none">
+                                <div class="info-row">
+                                    <span class="info-label">Ngân hàng:</span>
+                                    <span class="info-value" id="res-bank">...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Chủ TK:</span>
+                                    <span class="info-value" id="res-name">...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Số TK:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-account">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-account', this)">Copy</button>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Số tiền:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-amount">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-amount-raw', this)">Copy</button>
+                                        <span id="res-amount-raw" class="d-none"></span> </div>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Nội dung:</span>
+                                    <div class="d-flex align-items-center">
+                                        <span class="info-value" id="res-info">...</span>
+                                        <button type="button" class="btn-copy" onclick="copyToClipboard('res-info', this)">Copy</button>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -236,10 +268,44 @@
             }
         });
 
-        // Biến toàn cục lưu nội dung tin nhắn để copy
-        let messageToCopy = "";
+        // 3. Hàm Copy Từng Phần
+        function copyToClipboard(elementId, btnElement) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            const showSuccess = () => {
+                const originalText = "Copy";
+                btnElement.innerText = "Đã Copy ✓";
+                btnElement.classList.add("copied");
+                setTimeout(() => { 
+                    btnElement.innerText = originalText; 
+                    btnElement.classList.remove("copied"); 
+                }, 2000);
+            };
 
-        // 3. Xử lý khi bấm Tạo mã
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(showSuccess).catch(() => fallbackCopy(textToCopy));
+            } else {
+                fallbackCopy(textToCopy);
+            }
+
+            function fallbackCopy(text) {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; 
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showSuccess();
+                } catch (err) {
+                    alert("Trình duyệt chặn copy!");
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // 4. Xử lý khi bấm Tạo mã
         document.getElementById('qr-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const bankSelect = document.getElementById('bank');
@@ -261,66 +327,37 @@
             if (info) queryParams.push(`addInfo=${encodeURIComponent(info)}`);
             if (queryParams.length > 0) qrUrl += '?' + queryParams.join('&');
             
-            // Tạo chuỗi tin nhắn Zalo chuẩn chỉnh
-            let displayAmt = amt ? new Intl.NumberFormat('vi-VN').format(amt) + ' đ' : "Tùy chọn";
-            let displayInfo = info ? info : "Trống";
+            // Hiển thị dữ liệu lên bảng Copy
+            document.getElementById('res-bank').innerText = bankName;
+            document.getElementById('res-name').innerText = accName;
+            document.getElementById('res-account').innerText = acc;
+            
+            if(amt) {
+                // Hiển thị đẹp (có dấu chấm) nhưng copy số gốc
+                document.getElementById('res-amount').innerText = new Intl.NumberFormat('vi-VN').format(amt) + ' đ';
+                document.getElementById('res-amount-raw').innerText = amt;
+            } else {
+                document.getElementById('res-amount').innerText = "Tự nhập";
+                document.getElementById('res-amount-raw').innerText = "";
+            }
 
-            messageToCopy = `📌 Thông tin thanh toán:\n- Ngân hàng: ${bankName}\n- Chủ TK: ${accName}\n- Số TK: ${acc}\n- Số tiền: ${displayAmt}\n- Nội dung: ${displayInfo}`;
-
-            // Hiển thị ra màn hình HTML
-            document.getElementById('final-message-text').innerText = messageToCopy;
+            document.getElementById('res-info').innerText = info ? info : "Trống";
 
             // Đổi giao diện
             document.getElementById('qr-img').src = qrUrl;
             document.getElementById('qr-placeholder').classList.add('d-none');
             document.getElementById('qr-img').classList.remove('d-none');
             document.getElementById('btn-download-qr').classList.remove('d-none'); // HIỆN NÚT TẢI ẢNH
-            document.getElementById('message-container').classList.remove('d-none');
+            document.getElementById('transfer-info').classList.remove('d-none'); // HIỆN BẢNG COPY TỪNG PHẦN
             document.getElementById('result-panel').classList.add('has-result');
         });
 
-        // 4. Hàm Copy toàn bộ tin nhắn
-        function copyFullMessage(btnElement) {
-            const showSuccess = () => {
-                const originalText = "📋 COPY TOÀN BỘ TIN NHẮN";
-                btnElement.innerText = "✓ ĐÃ COPY THÀNH CÔNG";
-                btnElement.classList.add("copied");
-                setTimeout(() => { 
-                    btnElement.innerText = originalText; 
-                    btnElement.classList.remove("copied"); 
-                }, 2500);
-            };
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(messageToCopy).then(showSuccess).catch(() => fallbackCopy(messageToCopy));
-            } else {
-                fallbackCopy(messageToCopy);
-            }
-
-            function fallbackCopy(text) {
-                let textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed"; 
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    showSuccess();
-                } catch (err) {
-                    alert("Trình duyệt chặn copy!");
-                }
-                document.body.removeChild(textArea);
-            }
-        }
-
-        // 5. HÀM TẢI ẢNH QR VỀ MÁY (MỚI THÊM)
+        // 5. HÀM TẢI ẢNH QR VỀ MÁY
         async function downloadQRImage() {
             const imgUrl = document.getElementById('qr-img').src;
             if(!imgUrl) return;
 
             try {
-                // Thử tải ảnh qua fetch để lưu thẳng thành file
                 const response = await fetch(imgUrl);
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -328,7 +365,7 @@
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'QR_ThanhToan_LinhHai.png'; // Tên file khi tải về
+                a.download = 'QR_ThanhToan_LinhHai.png';
                 
                 document.body.appendChild(a);
                 a.click();
@@ -336,7 +373,6 @@
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
             } catch (err) {
-                // Nếu trình duyệt chặn (lỗi CORS), mở ảnh ở tab mới cho người dùng tự bấm giữ để lưu
                 window.open(imgUrl, '_blank');
             }
         }
